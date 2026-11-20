@@ -122,4 +122,12 @@ npm run dev   # http://localhost:3000/admin
 
 ## 배포
 
-Vercel 또는 Node.js 기반 Next.js 호스팅에 배포할 수 있습니다. 실제 도메인이 정해지면 `metadataBase`, canonical, 사이트맵 및 공유 이미지 URL을 설정하세요. 현재 외부 서비스에 배포하거나 공개 URL을 생성하지 않았습니다.
+Vercel 프로젝트 `sangwan-portfolio`(https://sangwan-portfolio.vercel.app)에 배포합니다.
+
+```sh
+npx vercel deploy --prod
+```
+
+- CLI 배포는 `.gitignore` 대신 `.vercelignore`를 따릅니다. 개인 자료(`/career/`, `.env*`)와 AI 작업 지침은 두 파일 모두에서 제외합니다.
+- Vercel 환경 변수에 `CAREER_ADMIN`을 넣지 마세요. 넣으면 `/admin`이 열립니다.
+- 주소가 바뀌면 `src/data/profile.ts`의 `site`를 고치세요. 공유 메타데이터(`metadataBase`)와 PDF 표지가 이 값을 씁니다.
