@@ -10,8 +10,9 @@ playwright-report/
 !.env.example
 
 # personal career documents (PII)
-career/
+/career/
 
 # AI 작업 지침(구직 전략·사실 메모 포함). 로컬에만 둔다
 AGENTS.md
 CLAUDE.md
+.vercel

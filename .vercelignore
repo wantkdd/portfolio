@@ -1,2 +1,11 @@
-career/
+# Vercel CLI 배포에서 제외 (CLI는 .gitignore 대신 이 파일을 쓴다)
+/career/
 .env*
+tmp/
+.next/
+out/
+test-results/
+playwright-report/
+.omx/
+AGENTS.md
+CLAUDE.md
