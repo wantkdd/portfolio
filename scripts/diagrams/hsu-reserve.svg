@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" font-family="Apple SD Gothic Neo, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3faf6"/>
+      <stop offset="1" stop-color="#d3ecdf"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3fae7f"/>
+      <stop offset="1" stop-color="#1f6f55"/>
+    </linearGradient>
+    <filter id="s" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#1f6f55" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <circle cx="1380" cy="860" r="280" fill="#ffffff" opacity="0.45"/>
+  <circle cx="160" cy="120" r="200" fill="#ffffff" opacity="0.45"/>
+
+  <!-- 로고 마크: 달력 타일 + 확인 표시 + 말풍선 -->
+  <g transform="translate(240 250)" filter="url(#s)">
+    <rect x="0" y="40" width="440" height="440" rx="70" fill="url(#mark)"/>
+    <rect x="0" y="40" width="440" height="120" rx="70" fill="#1f6f55"/>
+    <rect x="0" y="110" width="440" height="50" fill="#1f6f55"/>
+    <rect x="100" y="0" width="34" height="100" rx="17" fill="#173f33"/>
+    <rect x="306" y="0" width="34" height="100" rx="17" fill="#173f33"/>
+    <g fill="#ffffff" opacity="0.28">
+      <rect x="60" y="210" width="70" height="56" rx="12"/>
+      <rect x="150" y="210" width="70" height="56" rx="12"/>
+      <rect x="240" y="210" width="70" height="56" rx="12"/>
+      <rect x="330" y="210" width="50" height="56" rx="12"/>
+      <rect x="60" y="290" width="70" height="56" rx="12"/>
+      <rect x="150" y="290" width="70" height="56" rx="12"/>
+      <rect x="60" y="370" width="70" height="56" rx="12"/>
+    </g>
+    <rect x="240" y="290" width="140" height="136" rx="20" fill="#fff"/>
+    <path d="M275 358L303 386L350 336" fill="none" stroke="#1f6f55" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(600 210)" filter="url(#s)">
+    <path d="M0 40Q0 0 40 0H230Q270 0 270 40V120Q270 160 230 160H90L40 205V160Q0 160 0 120Z" fill="#fff"/>
+    <text x="135" y="95" text-anchor="middle" font-size="40" font-weight="700" fill="#1f6f55">2시~4시</text>
+  </g>
+
+  <text x="820" y="530" font-size="132" font-weight="800" fill="#163f32" letter-spacing="-4">HSU</text>
+  <text x="1110" y="530" font-size="132" font-weight="300" fill="#2d8f66" letter-spacing="-4">Reserve</text>
+  <text x="826" y="610" font-size="38" fill="#3c6656">말로 하는 학교 시설 예약</text>
+  <g font-size="26">
+    <rect x="826" y="660" width="150" height="56" rx="28" fill="#fff"/>
+    <text x="901" y="697" text-anchor="middle" fill="#1f6f55">빈자리</text>
+    <rect x="992" y="660" width="130" height="56" rx="28" fill="#fff"/>
+    <text x="1057" y="697" text-anchor="middle" fill="#1f6f55">예약</text>
+    <rect x="1138" y="660" width="130" height="56" rx="28" fill="#fff"/>
+    <text x="1203" y="697" text-anchor="middle" fill="#1f6f55">취소</text>
+    <rect x="1284" y="660" width="120" height="56" rx="28" fill="#1f6f55"/>
+    <text x="1344" y="697" text-anchor="middle" fill="#fff">MCP</text>
+  </g>
+</svg>

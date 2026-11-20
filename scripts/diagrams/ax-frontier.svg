@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" font-family="Apple SD Gothic Neo, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9fe"/>
+      <stop offset="1" stop-color="#d8eaf8"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3d8fd1"/>
+      <stop offset="1" stop-color="#1d4f86"/>
+    </linearGradient>
+    <filter id="s" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#1d4f86" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <circle cx="1330" cy="170" r="260" fill="#ffffff" opacity="0.45"/>
+  <circle cx="230" cy="900" r="220" fill="#ffffff" opacity="0.4"/>
+
+  <!-- 로고 마크: 말풍선 안의 문서와 확인 표시 -->
+  <g transform="translate(250 270)" filter="url(#s)">
+    <path d="M0 70Q0 0 70 0H390Q460 0 460 70V320Q460 390 390 390H170L70 470V390Q0 390 0 320Z" fill="url(#mark)"/>
+    <rect x="120" y="70" width="220" height="270" rx="22" fill="#fff"/>
+    <rect x="160" y="120" width="140" height="16" rx="8" fill="#c9e1f4"/>
+    <rect x="160" y="160" width="110" height="16" rx="8" fill="#c9e1f4"/>
+    <rect x="160" y="200" width="130" height="16" rx="8" fill="#c9e1f4"/>
+    <circle cx="300" cy="300" r="62" fill="#ffd166" stroke="#fff" stroke-width="10"/>
+    <path d="M272 300L292 320L330 280" fill="none" stroke="#1d4f86" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- 연결된 세 점: 여러 에이전트 -->
+  <g fill="#3d8fd1">
+    <circle cx="790" cy="300" r="14"/>
+    <circle cx="830" cy="260" r="10" opacity="0.7"/>
+    <circle cx="860" cy="215" r="7" opacity="0.5"/>
+  </g>
+
+  <text x="820" y="520" font-size="132" font-weight="800" fill="#173a63" letter-spacing="-4">AX</text>
+  <text x="1010" y="520" font-size="132" font-weight="300" fill="#2f7cbf" letter-spacing="-4">frontier</text>
+  <text x="826" y="600" font-size="38" fill="#3a5a78">묻고, 찾고, 문서까지 검토하는 학교 AI</text>
+  <g font-size="26" fill="#1d4f86">
+    <rect x="826" y="650" width="160" height="56" rx="28" fill="#fff"/>
+    <text x="906" y="687" text-anchor="middle">학교 정보</text>
+    <rect x="1002" y="650" width="160" height="56" rx="28" fill="#fff"/>
+    <text x="1082" y="687" text-anchor="middle">도서 검색</text>
+    <rect x="1178" y="650" width="200" height="56" rx="28" fill="#1d4f86"/>
+    <text x="1278" y="687" text-anchor="middle" fill="#fff">전자결재 검토</text>
+  </g>
+</svg>

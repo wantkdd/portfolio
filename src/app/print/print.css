@@ -1,0 +1,258 @@
+/* 포트폴리오 PDF(/print) 전용 스타일. A4 한 면 기준 */
+@page {
+  size: A4;
+  margin: 14mm 15mm 16mm;
+}
+.print-doc {
+  max-width: 180mm;
+  margin: 0 auto;
+  color: var(--ink);
+  background: #fff;
+  font-size: 9.6pt;
+  line-height: 1.65;
+}
+.print-doc p,
+.print-doc dd {
+  word-break: keep-all;
+}
+.print-cover .print-wordmark {
+  height: 22px;
+  width: auto;
+  color: var(--ink);
+}
+.print-cover .print-wordmark .wordmark-dot {
+  fill: var(--blue);
+}
+.print-areas {
+  margin-top: 26px;
+  color: var(--blue);
+  font-size: 9pt;
+  letter-spacing: 0.4px;
+}
+.print-cover h1 {
+  font-size: 26pt;
+  letter-spacing: -1px;
+  margin-top: 4px;
+}
+.print-cover h1 span {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 16pt;
+  color: var(--muted);
+  margin-left: 6px;
+}
+.print-summary {
+  margin-top: 6px;
+  font-size: 11pt;
+}
+.print-contact {
+  display: flex;
+  gap: 22px;
+  margin-top: 14px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.print-contact dt,
+.print-facts dt,
+.print-case dt {
+  color: var(--muted);
+  font-size: 8pt;
+}
+.print-about {
+  margin-top: 18px;
+}
+.print-about p + p {
+  margin-top: 7px;
+}
+.print-lead {
+  font-size: 12pt;
+  font-weight: 600;
+}
+.print-timeline {
+  margin-top: 18px;
+  display: grid;
+  gap: 7px;
+}
+.print-timeline > div {
+  display: grid;
+  grid-template-columns: 34mm 1fr;
+  gap: 10px;
+}
+.print-timeline span {
+  color: var(--muted);
+  font-size: 8.5pt;
+}
+.print-timeline p {
+  color: var(--muted);
+  font-size: 8.5pt;
+}
+.print-tags {
+  color: var(--blue) !important;
+}
+.print-index {
+  list-style: none;
+  margin-top: 18px;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.print-index li {
+  display: grid;
+  grid-template-columns: 8mm 34mm 1fr auto;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+.print-index span,
+.print-number {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--muted);
+}
+.print-index em {
+  font-style: normal;
+  color: var(--muted);
+  font-size: 8.5pt;
+}
+.print-index small,
+.print-project header small,
+.print-case h3 small {
+  color: var(--blue);
+  font-size: 7.5pt;
+}
+.print-project {
+  break-before: page;
+}
+.print-project header {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  border-bottom: 1.5px solid var(--ink);
+  padding-bottom: 8px;
+}
+.print-project header > div {
+  flex: 1;
+}
+.print-project h2 {
+  font-size: 19pt;
+  letter-spacing: -0.6px;
+  line-height: 1.2;
+}
+.print-project header p {
+  color: var(--muted);
+  font-size: 9pt;
+}
+.print-number {
+  font-size: 20pt;
+}
+.print-tagline {
+  margin-top: 10px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12pt;
+}
+.print-cover-image {
+  display: block;
+  width: 100%;
+  max-height: 78mm;
+  object-fit: contain;
+  margin: 10px 0;
+  border-radius: 8px;
+  background: #f2f7fa;
+}
+.print-facts {
+  display: grid;
+  gap: 5px;
+}
+.print-facts > div,
+.print-case dl > div {
+  display: grid;
+  grid-template-columns: 22mm 1fr;
+  gap: 8px;
+}
+.print-doc figure {
+  margin: 10px 0;
+  break-inside: avoid;
+}
+.print-doc figure img {
+  width: 100%;
+  border-radius: 8px;
+}
+.print-doc figcaption {
+  color: var(--muted);
+  font-size: 8.5pt;
+}
+.print-case {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.print-case h3 {
+  font-size: 11pt;
+  margin-bottom: 6px;
+  break-after: avoid;
+}
+.print-case h3 span {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--muted);
+}
+.print-case h3 small {
+  margin-left: 8px;
+  font-weight: 400;
+}
+.print-case dl {
+  display: grid;
+  gap: 4px;
+}
+.print-case dl > div {
+  break-inside: avoid;
+}
+.print-links {
+  margin-top: 5px;
+  padding-left: 30mm;
+  color: var(--blue);
+  font-size: 8pt;
+  list-style: none;
+}
+.print-benchmark {
+  margin-top: 14px;
+  break-inside: avoid;
+}
+.print-benchmark table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+  font-size: 9pt;
+}
+.print-benchmark caption {
+  text-align: left;
+  color: var(--muted);
+  font-size: 8pt;
+  padding-bottom: 4px;
+}
+.print-benchmark th,
+.print-benchmark td {
+  border-bottom: 1px solid var(--line);
+  padding: 4px 6px;
+  text-align: left;
+}
+.print-note {
+  margin-top: 12px;
+  padding: 8px 10px;
+  background: #f2f7fa;
+  border-radius: 6px;
+  font-size: 8.5pt;
+  color: var(--muted);
+}
+body:has(.print-doc) {
+  background: #fff;
+}
+body:has(.print-doc) .skip-link {
+  display: none;
+}
+.print-doc dd {
+  margin: 0;
+}
