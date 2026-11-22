@@ -18,6 +18,9 @@ const names = [
   "image-to-cad-2",
   "image-to-cad-3",
   "gotit",
+  "sightline",
+  "sightline-2",
+  "sightline-3",
 ];
 const diagrams = ["ax-frontier", "hsu-reserve", "ekec"];
 const sources = [

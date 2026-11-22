@@ -44,6 +44,18 @@ export const imageDimensions = {
     width: 1600,
     height: 900,
   },
+  sightline: {
+    width: 1600,
+    height: 900,
+  },
+  "sightline-2": {
+    width: 1600,
+    height: 900,
+  },
+  "sightline-3": {
+    width: 1600,
+    height: 900,
+  },
   "ax-frontier": {
     width: 1600,
     height: 1000,

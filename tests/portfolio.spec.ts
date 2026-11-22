@@ -5,11 +5,11 @@ test("project filters and navigation remain usable", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
-  await expect(page.locator(".project-card")).toHaveCount(10);
+  await expect(page.locator(".project-card")).toHaveCount(11);
   for (const [area, role, count] of [
     ["Frontend", "frontend", 8],
     ["Backend", "backend", 5],
-    ["AI", "ai", 5],
+    ["AI", "ai", 6],
   ] as const) {
     await page.getByRole("button", { name: area, exact: true }).click();
     await expect(page.locator(".project-card")).toHaveCount(count);
@@ -24,7 +24,7 @@ test("project filters and navigation remain usable", async ({ page }) => {
   await expect(
     page.getByRole("button", { name: "AI", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".project-card")).toHaveCount(5);
+  await expect(page.locator(".project-card")).toHaveCount(6);
   await page.getByRole("button", { name: /All/ }).click();
   await page.locator("a.project-moa").click();
   await expect(page).toHaveURL(/\/projects\/moa$/);
@@ -116,6 +116,7 @@ test("all detail pages, images, and narrow layouts render", async ({
     ["whylog", "WhyLog"],
     ["plog", "PLOG"],
     ["image-to-cad", "2D Image To CAD"],
+    ["sightline", "Sightline"],
     ["ax-frontier", "AX-frontier"],
     ["hsu-reserve", "HSU Reserve"],
     ["leafly", "Leafly"],

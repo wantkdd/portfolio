@@ -1082,6 +1082,28 @@ p.case-areas {
   height: auto;
   object-fit: contain;
 }
+.detail-video {
+  margin-top: 28px;
+}
+.detail-video {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.detail-video video {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: min(78vh, 720px);
+  aspect-ratio: 576 / 1280;
+  border-radius: var(--radius);
+  background: #0e1a26;
+}
+.detail-video figcaption {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
 .detail-figures {
   display: grid;
   gap: 28px;

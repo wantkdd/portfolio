@@ -134,6 +134,11 @@ export default function PrintPage() {
               </dd>
             </div>
           </dl>
+          {p.video && (
+            <p className="print-note">
+              시연 영상: {linkText(profile.site)}/projects/{p.slug}
+            </p>
+          )}
           {p.figures?.map((figure) => (
             <figure key={figure.image}>
               <img src={`/images/${figure.image}.webp`} alt={figure.alt} />

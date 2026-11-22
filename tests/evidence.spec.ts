@@ -10,6 +10,7 @@ test("representative work exposes responsibility before opening a case", async (
     "WhyLog",
     "PLOG",
     "2D Image To CAD",
+    "Sightline",
     "AX-frontier",
     "HSU Reserve",
     "Leafly",

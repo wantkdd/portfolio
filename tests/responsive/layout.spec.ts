@@ -73,9 +73,9 @@ test("landing and all cases fit, with usable touch controls", async ({
   }
   await page.screenshot({ path: `${directory}/hero.png`, scale: "css" });
   await page.getByRole("button", { name: "AI", exact: true }).click();
-  await expect(page.locator(".project-card")).toHaveCount(5);
+  await expect(page.locator(".project-card")).toHaveCount(6);
   await page.getByRole("button", { name: /All/ }).click();
-  await expect(page.locator(".project-card")).toHaveCount(10);
+  await expect(page.locator(".project-card")).toHaveCount(11);
   await page.locator("#work").scrollIntoViewIfNeeded();
   await page.screenshot({ path: `${directory}/work.png`, scale: "css" });
   await page.locator("#contact").scrollIntoViewIfNeeded();
@@ -127,7 +127,7 @@ test("landing and all cases fit, with usable touch controls", async ({
     await page.getByRole("button", { name: "AI", exact: true }).click();
     for (const viewport of transitions) {
       await page.setViewportSize(viewport);
-      await expect(page.locator(".project-card")).toHaveCount(5);
+      await expect(page.locator(".project-card")).toHaveCount(6);
       await expect(
         page.getByRole("button", { name: "AI", exact: true }),
       ).toHaveAttribute("aria-pressed", "true");

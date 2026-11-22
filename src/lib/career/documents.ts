@@ -31,7 +31,11 @@ const groupLabels: Record<string, string> = {
   pdf: "직무별 이력서·포트폴리오 PDF",
 };
 
-async function walk(root: FileRoot, dir: string, out: CareerDocument[]): Promise<void> {
+async function walk(
+  root: FileRoot,
+  dir: string,
+  out: CareerDocument[],
+): Promise<void> {
   let entries;
   try {
     entries = await readdir(dir, { withFileTypes: true });

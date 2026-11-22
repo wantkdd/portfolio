@@ -42,5 +42,7 @@ export function resolveStoredPath(stored: string): string | null {
 }
 
 export function toStoredPath(root: FileRoot, full: string): string {
-  return [root, ...path.relative(fileRoots[root], full).split(path.sep)].join("/");
+  return [root, ...path.relative(fileRoots[root], full).split(path.sep)].join(
+    "/",
+  );
 }

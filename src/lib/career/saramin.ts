@@ -32,7 +32,12 @@ export type SaraminResult =
   | { ok: true; total: number; jobs: SaraminJob[] }
   | { ok: false; message: string };
 
-type Named = { code?: string | number; name?: string; min?: number; max?: number };
+type Named = {
+  code?: string | number;
+  name?: string;
+  min?: number;
+  max?: number;
+};
 type RawJob = {
   id: string;
   url: string;
@@ -71,14 +76,18 @@ function normalize(job: RawJob): SaraminJob {
     education: p["required-education-level"]?.name ?? "",
     keyword: job.keyword ?? "",
     // 접수 마감일(1)일 때만 마감 시각이 의미 있다.
-    deadline: closeCode === "1" && ts > 0 ? new Date(ts * 1000).toISOString() : null,
+    deadline:
+      closeCode === "1" && ts > 0 ? new Date(ts * 1000).toISOString() : null,
     closeType: job["close-type"]?.name ?? "",
   };
 }
 
-export async function searchSaramin(query: SaraminSearch): Promise<SaraminResult> {
+export async function searchSaramin(
+  query: SaraminSearch,
+): Promise<SaraminResult> {
   const key = process.env.SARAMIN_ACCESS_KEY;
-  if (!key) return { ok: false, message: "SARAMIN_ACCESS_KEY 가 설정되지 않았습니다." };
+  if (!key)
+    return { ok: false, message: "SARAMIN_ACCESS_KEY 가 설정되지 않았습니다." };
   const params = new URLSearchParams({
     "access-key": key,
     keywords: query.keywords,
@@ -94,14 +103,26 @@ export async function searchSaramin(query: SaraminSearch): Promise<SaraminResult
       signal: AbortSignal.timeout(15_000),
     });
   } catch (error) {
-    return { ok: false, message: `사람인 API 요청 실패: ${(error as Error).message}` };
+    return {
+      ok: false,
+      message: `사람인 API 요청 실패: ${(error as Error).message}`,
+    };
   }
-  const body = (await res.json().catch(() => null)) as
-    | { jobs?: { total?: string | number; job?: RawJob[] }; result?: { code?: string; message?: string } }
-    | null;
-  if (!body) return { ok: false, message: `사람인 API 응답을 읽지 못했습니다 (HTTP ${res.status}).` };
+  const body = (await res.json().catch(() => null)) as {
+    jobs?: { total?: string | number; job?: RawJob[] };
+    result?: { code?: string; message?: string };
+  } | null;
+  if (!body)
+    return {
+      ok: false,
+      message: `사람인 API 응답을 읽지 못했습니다 (HTTP ${res.status}).`,
+    };
   if (body.result) {
-    return { ok: false, message: `사람인 API 오류 ${body.result.code}: ${body.result.message ?? ""}`.trim() };
+    return {
+      ok: false,
+      message:
+        `사람인 API 오류 ${body.result.code}: ${body.result.message ?? ""}`.trim(),
+    };
   }
   const jobs = (body.jobs?.job ?? []).map(normalize);
   return { ok: true, total: Number(body.jobs?.total ?? jobs.length), jobs };

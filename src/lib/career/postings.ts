@@ -47,12 +47,15 @@ export type Posting = {
   checkedAt?: string;
 };
 
-const statusLabels: Record<string, string> = Object.fromEntries(postingStatuses);
+const statusLabels: Record<string, string> =
+  Object.fromEntries(postingStatuses);
 const trackLabels: Record<string, string> = Object.fromEntries(postingTracks);
 export const statusLabel = (s: string) => statusLabels[s] ?? s;
 export const trackLabel = (t: string) => trackLabels[t] ?? t;
-export const isStatus = (s: string): s is PostingStatus => Object.hasOwn(statusLabels, s);
-export const isTrack = (t: string): t is PostingTrack => Object.hasOwn(trackLabels, t);
+export const isStatus = (s: string): s is PostingStatus =>
+  Object.hasOwn(statusLabels, s);
+export const isTrack = (t: string): t is PostingTrack =>
+  Object.hasOwn(trackLabels, t);
 
 const dataFile = path.join(rootDir("career"), "data", "postings.json");
 
@@ -122,7 +125,8 @@ export function formatDeadline(p: Posting): string {
 
 /** 마감 있는 공고는 빠른 순, 마감 없는 공고는 뒤로. */
 export function byDeadline(a: Posting, b: Posting): number {
-  if (a.deadline && b.deadline) return Date.parse(a.deadline) - Date.parse(b.deadline);
+  if (a.deadline && b.deadline)
+    return Date.parse(a.deadline) - Date.parse(b.deadline);
   if (a.deadline) return -1;
   if (b.deadline) return 1;
   return a.company.localeCompare(b.company, "ko");

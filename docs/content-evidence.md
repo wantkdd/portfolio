@@ -82,6 +82,10 @@ Manual draft save, single DRAFT_REVIEW key, URI strings only, no account isolati
 
 [ButterWaffle-GotIT/GotIT](https://github.com/ButterWaffle-GotIT/GotIT): 14 merged PRs by wantkdd, 4-person class project (웹프레임워크1). Gemini 2.5 Flash chatbot as a server action with JSON output and 3 follow-up questions ([#51](https://github.com/ButterWaffle-GotIT/GotIT/pull/51)); dialog examples for 100 terms ([#49](https://github.com/ButterWaffle-GotIT/GotIT/pull/49)); skeleton and logged-out recommendations ([#89](https://github.com/ButterWaffle-GotIT/GotIT/pull/89), [#99](https://github.com/ButterWaffle-GotIT/GotIT/pull/99)). User input is interpolated into the prompt; no injection defence, no tests. Image from the user's earlier portfolio site.
 
+## Sightline — on-device AI class project, private (added 2026-11-22)
+
+Sources: team documents in ~/Downloads ([7]7팀(멋쟁이토마토) 모델 설계 및 최적화 문서, 테스트계획서, 발표자료, 중간점검 발표대본) and the team demo video. Team: PM 진성원, FE 허현·진성원, BE 홍주영·조윤지·유상완. Repos `hs-sightline/{ai,api,mobile}` are private and show no wantkdd commits; the user states he built the datasets and ran LoRA training/evaluation with AI tools as local files (user statement, 2026-11-22). Numbers: help-request model eval 442 exact 6.1→78.7%, function 26.0→98.4%, args 12.2→86.0%, boundary 30 10.0→86.7%; midterm admin-query model 0.6→96.6% (464). W8A16 quantization and QCS6490 conversion by 마음AI (79.41% is their measurement). Board resident execution ~10s→0.5–1.6s/sentence and board end-to-end 83.3% (10/12), 0 false alarms are team results. Demo video re-encoded to `public/videos/sightline-demo.mp4` with the user's permission.
+
 DecodEat was left out by choice; BUG study group not added.
 
 ## Collaboration

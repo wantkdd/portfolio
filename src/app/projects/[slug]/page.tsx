@@ -143,6 +143,18 @@ export default async function ProjectPage({
             />
           )}
         </div>
+        {project.video && (
+          <figure className="detail-video">
+            <video
+              src={project.video.src}
+              poster={project.video.poster}
+              controls
+              preload="none"
+              playsInline
+            />
+            <figcaption>{project.video.caption}</figcaption>
+          </figure>
+        )}
         {project.figures && (
           <div className="detail-figures">
             {project.figures.map((figure) => (
