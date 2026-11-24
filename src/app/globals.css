@@ -440,20 +440,62 @@ img {
   pointer-events: none;
   mask-image: linear-gradient(90deg, #0002 6%, #0007 24%, #000 45%);
 }
-.hero-flight::before {
+/* Comet tail: the plane streaks across the night like a shooting star. */
+.hero-flight::before,
+.hero-flight::after {
   content: "";
   position: absolute;
-  top: 62%;
-  right: 59%;
-  width: 80%;
-  height: 6%;
-  background: radial-gradient(
-    ellipse at 98% 50%,
-    #ffdcaf99,
-    #ccb5f326 42%,
-    transparent 72%
-  );
-  filter: blur(1px);
+  top: 44%;
+  right: 80%;
+  width: 170%;
+  height: 22%;
+  pointer-events: none;
+}
+.hero-flight::before {
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      #8f7cf21a 35%,
+      #c9b8ff73 72%,
+      #fff1dcd9 97%,
+      transparent 100%
+    )
+    center / 100% 26% no-repeat,
+    linear-gradient(
+      90deg,
+      transparent 10%,
+      #b9a6ff2e 60%,
+      #ffe3c266 96%,
+      transparent 100%
+    )
+    center / 100% 100% no-repeat;
+  border-radius: 50%;
+  filter: blur(5px);
+}
+.hero-flight::after {
+  background-image:
+    radial-gradient(circle, #fff 0 1.2px, transparent 2px),
+    radial-gradient(circle, #e4dbff 0 1px, transparent 1.6px),
+    radial-gradient(circle, #ffe7c7 0 1.4px, transparent 2.2px);
+  background-size:
+    46px 22px,
+    31px 17px,
+    67px 29px;
+  background-position:
+    0 3px,
+    11px 12px,
+    23px 6px;
+  mask-image: linear-gradient(90deg, transparent 5%, #0006 50%, #000 92%, transparent);
+  animation: comet-sparks 0.9s linear infinite;
+}
+@keyframes comet-sparks {
+  to {
+    background-position:
+      -46px 3px,
+      -20px 12px,
+      -44px 6px;
+  }
 }
 .hero-flight {
   position: absolute;
@@ -464,17 +506,42 @@ img {
   will-change: transform;
   transform: translateX(-200vw);
 }
+/* Moonlit tint so the daylight cutout belongs in the dusk sky. */
 .hero-flight-plane {
+  position: relative;
+  z-index: 1;
   display: block;
   width: 100%;
-  filter: drop-shadow(0 6px 8px #1010295c);
+  filter: brightness(0.7) contrast(1.08) saturate(0.72)
+    drop-shadow(0 0 1px #e4dbffcc) drop-shadow(0 0 16px #b9a6ff66)
+    drop-shadow(0 8px 10px #0a0a2280);
 }
 .hero-flight-rider {
   position: absolute;
+  z-index: 2;
   right: -1%;
   top: 22%;
   width: 21%;
+  filter: brightness(0.92) saturate(0.85) drop-shadow(0 0 10px #ffe3c24d);
   mask-image: linear-gradient(to bottom, #000 62%, transparent 92%);
+}
+/* Comet head glow just ahead of the nose. */
+.hero-flight-glow {
+  position: absolute;
+  z-index: 0;
+  top: 30%;
+  right: -14%;
+  width: 34%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff6e6b3 0, #ffd9b04d 22%, #b9a6ff1f 48%, transparent 70%);
+  animation: comet-pulse 1.4s ease-in-out infinite alternate;
+}
+@keyframes comet-pulse {
+  to {
+    opacity: 0.6;
+    transform: scale(0.88);
+  }
 }
 .hero:has(.hero-flight) .flight-trail {
   mask-image: linear-gradient(

@@ -95,6 +95,7 @@ export function PaperPlane() {
         createPortal(
           <div className="flight-layer" aria-hidden="true">
             <div ref={flyer} className="hero-flight">
+              <span className="hero-flight-glow" />
               {/* eslint-disable-next-line @next/next/no-img-element -- Small original sprites mounted only while flying. */}
               <img
                 className="hero-flight-plane"
