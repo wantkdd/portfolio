@@ -2,10 +2,22 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, ArrowUpRight, Github, LockKeyhole } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  Github,
+  LockKeyhole,
+} from "lucide-react";
 import { Header } from "@/components/header";
-import { areaLabels, projects, type EvidenceLink } from "@/data/portfolio";
+import {
+  areaLabels,
+  projectAreas,
+  projects,
+  type EvidenceLink,
+} from "@/data/portfolio";
 import { imageDimensions } from "@/data/image-dimensions";
+import "./project-detail.css";
 
 export const dynamicParams = false;
 
@@ -54,13 +66,45 @@ export default async function ProjectPage({
     <>
       <Header detail />
       <main id="main" className="detail-page section-wrap">
-        <div className="detail-heading">
-          <Link className="back-link" href="/#work">
-            <ArrowRight size={16} /> 모든 프로젝트
-          </Link>
-          <h1>{project.name}</h1>
-          <p className="detail-tagline">{project.tagline}</p>
-          <p className="detail-description">{project.description}</p>
+        <section className="detail-lead" aria-labelledby="project-title">
+          <div className="detail-heading">
+            <Link className="back-link" href="/#work">
+              <ArrowLeft size={16} aria-hidden="true" /> 모든 프로젝트
+            </Link>
+            <p className="detail-eyebrow">
+              {projectAreas(project)
+                .map((area) => areaLabels[area])
+                .join(" / ")}
+            </p>
+            <h1 id="project-title">{project.name}</h1>
+            <p className="detail-tagline">{project.tagline}</p>
+            <p className="detail-description">{project.description}</p>
+          </div>
+          <div
+            className={`detail-visual ${slug === "moamoa" ? "mobile-visual" : ""}`}
+          >
+            <Image
+              src={project.image}
+              alt={project.imageAlt}
+              {...dimensions}
+              sizes={
+                slug === "moamoa"
+                  ? "(max-width:760px) 40vw, 300px"
+                  : "(max-width:640px) 90vw, (max-width:1200px) 48vw, 650px"
+              }
+              preload
+            />
+            {slug === "moamoa" && (
+              <Image
+                src="/images/moamoa2.webp"
+                alt="MOAMOA 목표 달성 기능 소개"
+                {...imageDimensions.moamoa2}
+                sizes="(max-width:760px) 40vw, 300px"
+              />
+            )}
+          </div>
+        </section>
+        <section className="detail-overview" aria-label="프로젝트 개요">
           <dl className="detail-meta">
             <div>
               <dt>기간</dt>
@@ -110,7 +154,7 @@ export default async function ProjectPage({
             {project.cases.map((entry, caseIndex) => (
               <a key={entry.title} href={`#case-${caseIndex + 1}`}>
                 <span>{String(caseIndex + 1).padStart(2, "0")}</span>
-                {entry.title}
+                <strong>{entry.title}</strong>
                 <small className="case-areas">
                   {entry.areas.map((area) => areaLabels[area]).join(" · ")}
                 </small>
@@ -118,31 +162,7 @@ export default async function ProjectPage({
               </a>
             ))}
           </nav>
-        </div>
-        <div
-          className={`detail-visual ${slug === "moamoa" ? "mobile-visual" : ""}`}
-          style={{ background: project.accent }}
-        >
-          <Image
-            src={project.image}
-            alt={project.imageAlt}
-            {...dimensions}
-            sizes={
-              slug === "moamoa"
-                ? "(max-width:760px) 40vw, 300px"
-                : "(max-width:760px) 90vw, 1100px"
-            }
-            preload
-          />
-          {slug === "moamoa" && (
-            <Image
-              src="/images/moamoa2.webp"
-              alt="MOAMOA 목표 달성 기능 소개"
-              {...imageDimensions.moamoa2}
-              sizes="(max-width:760px) 40vw, 300px"
-            />
-          )}
-        </div>
+        </section>
         {project.video && (
           <figure className="detail-video">
             <video
@@ -171,13 +191,15 @@ export default async function ProjectPage({
           </div>
         )}
         <div className="case-studies">
-          <p className="case-heading">만들면서 마주한 문제들</p>
           {project.cases.map((entry, caseIndex) => (
             <article
               className="case-study"
               id={`case-${caseIndex + 1}`}
               key={entry.title}
             >
+              <span className="case-number" aria-hidden="true">
+                {String(caseIndex + 1).padStart(2, "0")}
+              </span>
               <p className="case-areas">
                 {entry.areas.map((area) => areaLabels[area]).join(" · ")}
               </p>
@@ -190,7 +212,7 @@ export default async function ProjectPage({
                 <h3>판단과 구현</h3>
                 <p>{entry.solution}</p>
               </div>
-              <div className="case-step">
+              <div className="case-step case-result">
                 <h3>결과</h3>
                 <p>{entry.result}</p>
               </div>
