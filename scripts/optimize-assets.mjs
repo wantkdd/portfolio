@@ -5,7 +5,6 @@ import path from "node:path";
 // Inputs: original images from the supplied Figma file and the CAD research
 // report (`<input>/<name>.png`), plus diagrams drawn for this site (scripts/diagrams).
 const inputDirectory = process.argv[2] ?? "public/images";
-const skyPath = process.argv[3];
 const names = [
   "portrait",
   "whylog",
@@ -43,13 +42,6 @@ for (const [name, source] of sources) {
   console.log(
     `${name}: ${result.width}×${result.height}, ${Math.round(result.size / 1024)} KB`,
   );
-}
-if (skyPath) {
-  const result = await sharp(skyPath)
-    .resize({ width: 1920, withoutEnlargement: true })
-    .webp({ quality: 82, effort: 6 })
-    .toFile("public/images/sky.webp");
-  console.log(`sky: ${Math.round(result.size / 1024)} KB`);
 }
 await writeFile(
   "src/data/image-dimensions.ts",
