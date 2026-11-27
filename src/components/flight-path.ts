@@ -17,15 +17,15 @@ export const beaconVars = {
   "--mobile-beacon-y": `${trackHeight(beacon, true) * 100}%`,
 } as CSSProperties;
 
-/** Gentle U from the comet's resting head, right to left, off the left edge. */
+/**
+ * Deep U from off the left edge, through the comet's resting head, out the
+ * top right: a parabola with its low point under the headline, so the flight
+ * keeps the trail's left-to-right climb.
+ */
 export function cometPath(progress: number, compact: boolean) {
-  const startX = beacon;
-  const endX = -0.12;
-  const startY = trackHeight(beacon, compact);
-  const endY = startY - (compact ? 0.05 : 0.08);
-  const sag = compact ? 0.09 : 0.24;
-  return {
-    x: startX + (endX - startX) * progress,
-    y: startY + (endY - startY) * progress + sag * Math.sin(Math.PI * progress),
-  };
+  const lowX = 0.36;
+  const lowY = compact ? 0.74 : 0.64;
+  const curve = (lowY - trackHeight(beacon, compact)) / (beacon - lowX) ** 2;
+  const x = -0.12 + 1.26 * progress;
+  return { x, y: lowY - curve * (x - lowX) ** 2 };
 }

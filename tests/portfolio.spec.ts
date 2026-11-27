@@ -79,7 +79,7 @@ test("keyboard skip link and reduced motion", async ({ page }) => {
   await expect(page.locator(".comet-layer")).toHaveCount(0);
   expect(
     await page
-      .locator(".comet-star")
+      .locator(".comet-face")
       .evaluate((el) => el.getAnimations().length),
   ).toBe(0);
 });
@@ -98,9 +98,7 @@ test("comet returns after a keyboard-triggered flight", async ({ page }) => {
   await expect(page.locator(".comet-layer")).toHaveCount(0);
   await expect(page.locator(".hero")).not.toHaveAttribute("data-comet");
   await expect(button).toBeFocused();
-  await expect(
-    page.getByText("혜성이 지나갔어요. 다시 눌러 보세요."),
-  ).toBeAttached();
+  await expect(page.getByText("혜성이 지나갔어요.")).toBeAttached();
 });
 
 test("all detail pages, images, and narrow layouts render", async ({

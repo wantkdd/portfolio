@@ -383,86 +383,49 @@ img {
 }
 @keyframes comet-ring {
   from {
-    transform: scale(0.45);
-    opacity: 0.9;
+    transform: scale(0.8);
+    opacity: 0.8;
   }
   to {
-    transform: scale(1.35);
+    transform: scale(1.6);
     opacity: 0;
   }
 }
-.comet-star {
-  position: relative;
-  width: 13px;
-  height: 13px;
+/* Nucleus: the owner's face inside a warm coma glow. */
+.comet-face {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: #fffbe8;
+  object-fit: cover;
+  object-position: 50% 30%;
+  background: #fff3e4;
+  border: 1.5px solid #ffeed6e6;
   box-shadow:
-    0 0 8px 4px #ffe8cc,
-    0 0 28px 12px #ffd4afb8,
-    0 0 74px 30px #f9bb9152;
+    0 0 10px 4px #ffe8ccb3,
+    0 0 34px 14px #ffd4af8c,
+    0 0 90px 36px #f9bb9147;
   transition: scale 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
   animation: glimmer 2.6s ease-in-out infinite alternate;
 }
-.comet-star::before,
-.comet-star::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  background: linear-gradient(90deg, transparent, #fff3dc 45% 55%, transparent);
-}
-.comet-star::before {
-  width: 92px;
-  height: 1.5px;
-}
-.comet-star::after {
-  width: 1.5px;
-  height: 58px;
-  background: linear-gradient(0deg, transparent, #fff3dc 45% 55%, transparent);
-}
 @keyframes glimmer {
   to {
-    opacity: 0.72;
-    transform: scale(0.86);
+    box-shadow:
+      0 0 8px 3px #ffe8cc99,
+      0 0 26px 10px #ffd4af73,
+      0 0 70px 26px #f9bb9133;
   }
 }
-.comet-head:hover .comet-star {
-  scale: 1.35;
+.comet-head:hover .comet-face {
+  scale: 1.15;
 }
 .comet-head:focus-visible {
   outline: 2px solid #efe6ff;
-  outline-offset: -6px;
+  outline-offset: 4px;
 }
 .hero[data-comet] .comet-head::before,
-.hero[data-comet] .comet-star {
+.hero[data-comet] .comet-face {
   opacity: 0;
   animation: none;
-}
-.comet-hint,
-.flight-status {
-  position: absolute;
-  top: calc(100% - 6px);
-  left: 50%;
-  translate: -50% 0;
-  width: max-content;
-  max-width: 190px;
-  font-size: 12px;
-  line-height: 1.5;
-  text-align: center;
-  word-break: keep-all;
-  pointer-events: none;
-}
-.comet-hint {
-  color: #f3e3dccc;
-  letter-spacing: 0.02em;
-}
-.flight-status {
-  color: #fcf1ee;
-}
-.flight-status:empty {
-  display: none;
 }
 .comet-layer {
   position: absolute;
@@ -598,11 +561,6 @@ img {
     height: 45px;
     font-size: 10px;
     letter-spacing: 0.055em;
-  }
-  .comet-hint,
-  .flight-status {
-    font-size: 11px;
-    line-height: 1.35;
   }
 }
 @media (max-width: 360px) {

@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { beaconVars, cometPath } from "./flight-path";
 
-const DURATION = 5200;
+const DURATION = 5600;
+const FACE_SRC = "/images/comet-face.webp";
 const reducedMessage = "혜성이 제자리에서 반짝였어요.";
 
 type Spark = {
@@ -16,7 +17,6 @@ type Spark = {
   life: number;
   size: number;
   color: string;
-  ray: boolean;
 };
 
 const warm = ["255,244,226", "255,222,196", "255,206,186"];
@@ -26,35 +26,42 @@ function pick(list: string[]) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
+// The nucleus is the owner's face inside a glowing coma; no starburst rays.
 function drawHead(
   context: CanvasRenderingContext2D,
   x: number,
   y: number,
   scale: number,
-  flicker: number,
+  face: HTMLImageElement,
 ) {
-  const reach = 72 * scale;
+  const reach = 96 * scale;
   const halo = context.createRadialGradient(x, y, 0, x, y, reach);
-  halo.addColorStop(0, "rgba(255,248,232,1)");
-  halo.addColorStop(0.08, "rgba(255,230,204,0.7)");
-  halo.addColorStop(0.3, "rgba(226,196,255,0.2)");
+  halo.addColorStop(0, "rgba(255,246,228,0.95)");
+  halo.addColorStop(0.16, "rgba(255,226,200,0.55)");
+  halo.addColorStop(0.4, "rgba(222,196,255,0.18)");
   halo.addColorStop(1, "rgba(214,190,255,0)");
   context.fillStyle = halo;
   context.fillRect(x - reach, y - reach, reach * 2, reach * 2);
-  context.strokeStyle = "rgba(255,246,230,0.9)";
-  context.lineWidth = 1.3 * scale;
-  const long = (46 + flicker * 8) * scale;
-  const short = (28 + flicker * 5) * scale;
+
+  const radius = 15 * scale;
+  context.globalCompositeOperation = "source-over";
+  context.save();
   context.beginPath();
-  context.moveTo(x - long, y);
-  context.lineTo(x + long, y);
-  context.moveTo(x, y - short);
-  context.lineTo(x, y + short);
-  context.stroke();
-  context.fillStyle = "#fffdf6";
-  context.beginPath();
-  context.arc(x, y, 4.2 * scale, 0, Math.PI * 2);
+  context.arc(x, y, radius, 0, Math.PI * 2);
+  context.fillStyle = "#fff3e4";
   context.fill();
+  if (face.complete && face.naturalWidth) {
+    context.clip();
+    const side = radius * 2.3;
+    context.drawImage(face, x - side / 2, y - side * 0.44, side, side);
+  }
+  context.restore();
+  context.strokeStyle = "rgba(255,238,214,0.9)";
+  context.lineWidth = 1.6 * scale;
+  context.beginPath();
+  context.arc(x, y, radius, 0, Math.PI * 2);
+  context.stroke();
+  context.globalCompositeOperation = "lighter";
 }
 
 export function Comet() {
@@ -82,7 +89,9 @@ export function Comet() {
     const width = hero.clientWidth;
     const height = hero.clientHeight;
     const compact = width <= 700;
-    const scale = compact ? 0.72 : 1;
+    const scale = compact ? 1 : 1.45;
+    const face = new Image();
+    face.src = FACE_SRC;
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     layer.width = Math.round(width * ratio);
     layer.height = Math.round(height * ratio);
@@ -99,32 +108,31 @@ export function Comet() {
       const step = Math.min(48, now - previous);
       previous = now;
       const t = Math.min(1, elapsed / DURATION);
-      // Ease out of the resting spot, then glide at a steady pace.
-      const progress = 0.4 * t + 0.6 * (0.5 - 0.5 * Math.cos(Math.PI * t));
+      // Gentle ease so the dive and the climb through the resting spot read clearly.
+      const progress = 0.7 * t + 0.3 * (0.5 - 0.5 * Math.cos(Math.PI * t));
       const point = cometPath(progress, compact);
       const head = { x: point.x * width, y: point.y * height };
 
       if (t < 1) {
         const last = trail[trail.length - 1];
         trail.push(head);
-        if (trail.length > 130) trail.shift();
+        if (trail.length > 150) trail.shift();
         const dx = last ? head.x - last.x : -1;
         const dy = last ? head.y - last.y : 0;
         const length = Math.hypot(dx, dy) || 1;
-        const emit = compact ? 6 : 12;
+        const emit = compact ? 8 : 16;
         for (let i = 0; i < emit; i++) {
-          const back = 0.2 + Math.random() * 1.2;
-          const side = (Math.random() - 0.5) * 1.6;
+          const back = 0.2 + Math.random() * 1.3;
+          const side = (Math.random() - 0.5) * 1.8;
           sparks.push({
-            x: head.x + (Math.random() - 0.5) * 8 * scale,
-            y: head.y + (Math.random() - 0.5) * 8 * scale,
+            x: head.x + (Math.random() - 0.5) * 14 * scale,
+            y: head.y + (Math.random() - 0.5) * 14 * scale,
             vx: (-dx / length) * back + (-dy / length) * side,
             vy: (-dy / length) * back + (dx / length) * side + 0.05,
             age: 0,
-            life: 1200 + Math.random() * 1600,
-            size: (0.5 + Math.random() * 1.6) * scale,
+            life: 1300 + Math.random() * 1700,
+            size: (0.6 + Math.random() * 1.7) * scale,
             color: Math.random() < 0.45 ? pick(warm) : pick(cool),
-            ray: Math.random() < 0.045,
           });
         }
       } else if (trail.length) {
@@ -174,26 +182,15 @@ export function Comet() {
         const twinkle = 0.55 + 0.45 * Math.sin(spark.age / 70 + spark.life);
         context.fillStyle = `rgba(${spark.color},${fade * twinkle})`;
         context.fillRect(spark.x, spark.y, spark.size, spark.size);
-        if (spark.ray) {
-          const ray = (2 + fade * 4) * scale;
-          context.strokeStyle = `rgba(${spark.color},${fade * 0.7})`;
-          context.lineWidth = 0.7;
-          context.beginPath();
-          context.moveTo(spark.x - ray, spark.y);
-          context.lineTo(spark.x + ray, spark.y);
-          context.moveTo(spark.x, spark.y - ray);
-          context.lineTo(spark.x, spark.y + ray);
-          context.stroke();
-        }
       }
 
-      if (t < 1) drawHead(context, head.x, head.y, scale, Math.sin(now / 90));
+      if (t < 1) drawHead(context, head.x, head.y, scale, face);
       context.globalCompositeOperation = "source-over";
 
       if (t < 1 || sparks.length || trail.length) {
         frame = requestAnimationFrame(tick);
       } else {
-        finish("혜성이 지나갔어요. 다시 눌러 보세요.");
+        finish("혜성이 지나갔어요.");
       }
     };
     frame = requestAnimationFrame(tick);
@@ -222,17 +219,10 @@ export function Comet() {
           setMessage("혜성이 하늘을 가로질러 날아갑니다.");
         }}
       >
-        <span className="comet-star" aria-hidden="true" />
+        {/* eslint-disable-next-line @next/next/no-img-element -- Tiny decorative cutout; the flight canvas reuses the cached file. */}
+        <img className="comet-face" src={FACE_SRC} alt="" aria-hidden="true" />
       </button>
-      {!flying && !message && (
-        <span className="comet-hint" aria-hidden="true">
-          혜성을 눌러 보세요
-        </span>
-      )}
-      <span
-        className={flying ? "visually-hidden" : "flight-status"}
-        role="status"
-      >
+      <span className="visually-hidden" role="status">
         {message}
       </span>
       {hero &&
