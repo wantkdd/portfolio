@@ -98,7 +98,7 @@ test("comet returns after a keyboard-triggered flight", async ({ page }) => {
   await expect(page.locator(".comet-layer")).toHaveCount(0);
   await expect(page.locator(".hero")).not.toHaveAttribute("data-comet");
   await expect(button).toBeFocused();
-  await expect(page.getByText("혜성이 지나갔어요.")).toBeAttached();
+  await expect(page.getByText("혜성이 제자리로 돌아왔어요.")).toBeAttached();
 });
 
 test("all detail pages, images, and narrow layouts render", async ({

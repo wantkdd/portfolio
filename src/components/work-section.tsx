@@ -74,7 +74,7 @@ function ProjectCard({ project: p }: { project: Project }) {
             <h3>{p.name}</h3>
             <span>{p.period}</span>
           </div>
-          {p.slug === "moa" && <p className="project-tagline">{p.tagline}</p>}
+          <p className="project-tagline">{p.tagline}</p>
           <p className="project-role">{p.role}</p>
           <p className="project-contribution">{p.highlight ?? p.tagline}</p>
           <div className="stack-tags">

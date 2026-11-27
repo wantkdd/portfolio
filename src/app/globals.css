@@ -270,9 +270,13 @@ img {
     transparent calc(var(--beacon-x) + 0.35%)
   );
 }
-.hero[data-comet] .flight-trail {
-  opacity: 0;
-  transition: opacity 0.5s ease;
+/* During a flight the existing trail is drawn in behind the comet's head. */
+.hero[data-comet] .flight-trail canvas {
+  mask-image: linear-gradient(
+    90deg,
+    black calc(var(--wake-x, 0px) - 70px),
+    transparent var(--wake-x, 0px)
+  );
 }
 .hero-ridges {
   top: auto;

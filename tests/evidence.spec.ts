@@ -5,10 +5,10 @@ test("representative work exposes responsibility before opening a case", async (
 }) => {
   await page.goto("/");
   await expect(page.locator(".project-card h3")).toHaveText([
-    "MOA",
-    "MOAMOA",
     "WhyLog",
+    "MOAMOA",
     "PLOG",
+    "MOA",
     "2D Image To CAD",
     "Sightline",
     "AX-frontier",

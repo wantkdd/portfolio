@@ -60,10 +60,10 @@ export function ProjectGallery({
         </span>
       </div>
       <div className={`project-grid ${active === "all" ? "all-projects" : ""}`}>
-        {filtered.map((p) => (
+        {filtered.map((p, index) => (
           <PointerSurface
             effect="card"
-            className={`project-item item-${p.slug}`}
+            className={`project-item item-${p.slug}${active === "all" && index === 0 ? " is-featured" : ""}`}
             key={p.slug}
           >
             {p.content}
