@@ -372,37 +372,18 @@ img {
 .comet-head[aria-disabled="true"] {
   cursor: default;
 }
-.comet-head::before {
-  content: "";
-  position: absolute;
-  inset: 14px;
-  border-radius: 50%;
-  border: 1px solid #ffe3c766;
-  animation: comet-ring 2.8s ease-out infinite;
-  pointer-events: none;
-}
-@keyframes comet-ring {
-  from {
-    transform: scale(0.8);
-    opacity: 0.8;
-  }
-  to {
-    transform: scale(1.6);
-    opacity: 0;
-  }
-}
-/* Coma: a warm glow behind the cutout face. */
+/* Coma: a soft round glow behind the cutout face; nothing else frames it. */
 .comet-head::after {
   content: "";
   position: absolute;
-  inset: -18px;
+  inset: -24px;
   z-index: -1;
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    #fff4e2d9 0,
-    #ffd9b580 18%,
-    #d9c2ff2e 42%,
+    #ffe2c48c 0,
+    #ffd2b04d 22%,
+    #d9c2ff1f 45%,
     transparent 68%
   );
   animation: glimmer 2.6s ease-in-out infinite alternate;
@@ -413,14 +394,13 @@ img {
     opacity: 0.7;
   }
 }
-/* Nucleus: the owner's cutout face, neckline faded so it has no edge. */
+/* Nucleus: only the cutout face; no shadow, since a filter would be clipped to a box by the mask. */
 .comet-face {
   position: relative;
   width: auto;
   height: 46px;
   margin-top: -4px;
   mask-image: linear-gradient(to bottom, #000 60%, transparent 92%);
-  filter: drop-shadow(0 0 6px #ffe8cc99);
   transition: scale 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .comet-head:hover .comet-face {
@@ -430,7 +410,6 @@ img {
   outline: 2px solid #efe6ff;
   outline-offset: 4px;
 }
-.hero[data-comet] .comet-head::before,
 .hero[data-comet] .comet-head::after,
 .hero[data-comet] .comet-face {
   opacity: 0;
