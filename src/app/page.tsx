@@ -1,7 +1,7 @@
 import { ArrowDown, ArrowDownToLine, Asterisk } from "lucide-react";
 import { Header } from "@/components/header";
+import { Comet } from "@/components/comet";
 import { NightSky } from "@/components/night-sky";
-import { PaperPlane } from "@/components/paper-plane";
 import { PointerSurface } from "@/components/pointer-surface";
 import { ProfileSections } from "@/components/profile-sections";
 import { WorkSection } from "@/components/work-section";
@@ -27,18 +27,13 @@ export default function Home() {
                 <span>{profile.title}</span>
               </p>
               <h1 id="hero-title">
-                만들고,
-                <br />
-                <span>검증합니다.</span>
-              </h1>
-              <p className="hero-description">
                 {profile.summary.split(/(?<=\.) /).map((sentence, index) => (
                   <span key={sentence}>
                     {index > 0 && " "}
                     {sentence}
                   </span>
                 ))}
-              </p>
+              </h1>
               <div className="hero-actions">
                 <a className="button primary" href="#work">
                   프로젝트 둘러보기 <ArrowDown size={16} aria-hidden="true" />
@@ -54,7 +49,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <PaperPlane />
+          <Comet />
           <div className="hero-bottom section-wrap">
             <span>{profile.areas}</span>
             <a href="#work">

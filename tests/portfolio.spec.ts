@@ -74,37 +74,33 @@ test("keyboard skip link and reduced motion", async ({ page }) => {
       .locator(".hero-content")
       .evaluate((el) => getComputedStyle(el).animationName),
   ).toBe("none");
-  await page.getByRole("button", { name: /종이비행기 날려보기/ }).click();
-  await expect(page.getByText("작은 호기심을 하늘에 띄웠어요.")).toBeAttached();
+  await page.getByRole("button", { name: "혜성 날려보기" }).click();
+  await expect(page.getByText("혜성이 제자리에서 반짝였어요.")).toBeAttached();
+  await expect(page.locator(".comet-layer")).toHaveCount(0);
   expect(
     await page
-      .locator(".paper-plane")
+      .locator(".comet-star")
       .evaluate((el) => el.getAnimations().length),
   ).toBe(0);
 });
 
-test("paper plane returns after a keyboard-triggered flight", async ({
-  page,
-}) => {
+test("comet returns after a keyboard-triggered flight", async ({ page }) => {
   await page.goto("/");
-  const button = page.getByRole("button", { name: /종이비행기 날려보기/ });
+  const button = page.getByRole("button", { name: "혜성 날려보기" });
   await button.focus();
   await page.keyboard.press("Enter");
   await expect(button).toHaveAttribute("aria-disabled", "true");
-  await expect(page.locator(".hero-flight")).toBeAttached();
+  await expect(page.locator(".comet-layer")).toBeAttached();
+  await expect(page.locator(".hero")).toHaveAttribute("data-comet", "flying");
   await expect(button).toHaveAttribute("aria-disabled", "false", {
     timeout: 10_000,
   });
-  await expect(page.locator(".hero-flight")).toHaveCount(0);
+  await expect(page.locator(".comet-layer")).toHaveCount(0);
+  await expect(page.locator(".hero")).not.toHaveAttribute("data-comet");
   await expect(button).toBeFocused();
   await expect(
-    page.getByText("다시 돌아왔어요. 한 번 더 날려볼까요?"),
+    page.getByText("혜성이 지나갔어요. 다시 눌러 보세요."),
   ).toBeAttached();
-  expect(
-    await page
-      .locator(".paper-plane")
-      .evaluate((el) => el.getAnimations().length),
-  ).toBe(0);
 });
 
 test("all detail pages, images, and narrow layouts render", async ({

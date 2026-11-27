@@ -59,9 +59,9 @@ export function PointerSurface({
         if (effect === "sky") {
           surface.style.setProperty(
             "--sky-x",
-            `${-horizontal * Math.min(12, box.width * 0.018)}px`,
+            `${-horizontal * Math.min(40, box.width * 0.03)}px`,
           );
-          surface.style.setProperty("--sky-y", `${-vertical * 8}px`);
+          surface.style.setProperty("--sky-y", `${-vertical * 24}px`);
         } else {
           surface.style.setProperty("--pointer-x", `${x}px`);
           surface.style.setProperty("--pointer-y", `${y}px`);

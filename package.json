@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
     "test:responsive": "playwright test --config=playwright.responsive.config.ts",
-    "portrait": "node scripts/optimize-assets.mjs tmp/source/images && uv run --python 3.12 --with 'rembg[cpu]' --with pillow --with numpy python scripts/make-rider.py",
+    "portrait": "node scripts/optimize-assets.mjs tmp/source/images",
     "pdf": "node scripts/make-portfolio-pdf.mjs"
   },
   "dependencies": {

@@ -1,15 +1,7 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
-import { trackHeight } from "./flight-path";
-
-const beacon = 0.824;
-// Reserve the endpoint on the first paint, including before canvas hydration.
-const beaconStyle = {
-  "--beacon-x": `${beacon * 100}%`,
-  "--desktop-beacon-y": `${trackHeight(beacon, false) * 100}%`,
-  "--mobile-beacon-y": `${trackHeight(beacon, true) * 100}%`,
-} as CSSProperties;
+import { useEffect, useRef } from "react";
+import { beacon, beaconVars, trackHeight } from "./flight-path";
 
 function seededRandom(seed: number) {
   return () => {
@@ -55,9 +47,8 @@ function paintStars(
   }
 }
 
-// Rasterize fine vapor threads and ice crystals once. A CSS mask follows the
-// plane during flight, so individual particles never need animation frames.
-function paintTrail(
+// Rasterize the soft vapor puffs and threads once; they only follow parallax.
+function paintHaze(
   context: CanvasRenderingContext2D,
   width: number,
   height: number,
@@ -113,8 +104,29 @@ function paintTrail(
     context.stroke();
   }
   context.globalAlpha = 1;
-  const particles = Math.floor(width * 2.3);
-  for (let i = 0; i < particles; i++) {
+}
+
+type Grain = {
+  homeX: number;
+  homeY: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  fill: string;
+  color: string;
+  alpha: number;
+  ray: number;
+};
+
+// The glittering dust is kept as live particles so the pointer can scatter it.
+function makeDust(width: number, height: number, compact: boolean) {
+  const random = seededRandom(1747);
+  const thickness = compact ? 0.64 : 1;
+  const grains: Grain[] = [];
+  const count = Math.floor(width * 2.3);
+  for (let i = 0; i < count; i++) {
     const x = random();
     const spread = Math.min(1, Math.abs(x - beacon) * 7.8);
     const scatter = (random() - 0.5) * (random() - 0.5) * 2;
@@ -124,58 +136,191 @@ function paintTrail(
     const bright = random();
     const alpha = Math.min(1, x * 1.4) * (0.12 + bright * 0.67);
     const color = x > 0.68 ? "255,221,199" : "216,203,255";
-    context.fillStyle = `rgba(${color},${alpha})`;
-    const radius = (0.3 + bright * bright * 1.15) * thickness;
-    context.fillRect(x * width, y, radius, radius);
-    if (bright > 0.988 && x > 0.37) {
-      glow(context, x * width, y, 7 * thickness, color, 0.42);
-      context.strokeStyle = `rgba(${color},${alpha})`;
-      context.lineWidth = 0.65;
-      const ray = (1.3 + random() * 1.5) * thickness;
-      context.beginPath();
-      context.moveTo(x * width - ray, y);
-      context.lineTo(x * width + ray, y);
-      context.moveTo(x * width, y - ray * 1.3);
-      context.lineTo(x * width, y + ray * 1.3);
-      context.stroke();
-    }
+    const sparkle = bright > 0.988 && x > 0.37;
+    grains.push({
+      homeX: x * width,
+      homeY: y,
+      x: x * width,
+      y,
+      vx: 0,
+      vy: 0,
+      size: (0.3 + bright * bright * 1.15) * thickness,
+      fill: `rgba(${color},${alpha})`,
+      color,
+      alpha,
+      ray: sparkle ? (1.3 + random() * 1.5) * thickness : 0,
+    });
+  }
+  return grains;
+}
+
+function paintDust(
+  context: CanvasRenderingContext2D,
+  grains: Grain[],
+  width: number,
+  height: number,
+  compact: boolean,
+) {
+  context.clearRect(0, 0, width, height);
+  for (const grain of grains) {
+    context.fillStyle = grain.fill;
+    context.fillRect(grain.x, grain.y, grain.size, grain.size);
+  }
+  const glowSize = 7 * (compact ? 0.64 : 1);
+  context.lineWidth = 0.65;
+  for (const grain of grains) {
+    if (!grain.ray) continue;
+    glow(context, grain.x, grain.y, glowSize, grain.color, 0.42);
+    context.strokeStyle = grain.fill;
+    context.beginPath();
+    context.moveTo(grain.x - grain.ray, grain.y);
+    context.lineTo(grain.x + grain.ray, grain.y);
+    context.moveTo(grain.x, grain.y - grain.ray * 1.3);
+    context.lineTo(grain.x, grain.y + grain.ray * 1.3);
+    context.stroke();
   }
 }
+
+const reach = 150;
+// Must match the trail's parallax factor in globals.css (.hero[data-pointer-active] .flight-trail).
+const trailDepth = 0.6;
 
 export function NightSky() {
   const sky = useRef<HTMLDivElement>(null);
   const stars = useRef<HTMLCanvasElement>(null);
-  const contrail = useRef<HTMLCanvasElement>(null);
+  const haze = useRef<HTMLCanvasElement>(null);
+  const dust = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const host = sky.current;
     const starCanvas = stars.current;
-    const trailCanvas = contrail.current;
-    if (!host || !starCanvas || !trailCanvas) return;
-    const paint = () => {
-      const { clientWidth: width, clientHeight: height } = host;
-      const compact = width <= 700;
-      const scale = Math.min(window.devicePixelRatio || 1, 1.5);
-      for (const canvas of [starCanvas, trailCanvas]) {
-        canvas.width = Math.round(width * scale);
-        canvas.height = Math.round(height * scale);
-        const ctx = canvas.getContext("2d");
-        if (!ctx) continue;
-        ctx.scale(scale, scale);
-        if (canvas === starCanvas) paintStars(ctx, width, height);
-        else paintTrail(ctx, width, height, compact);
-      }
+    const hazeCanvas = haze.current;
+    const dustCanvas = dust.current;
+    const hero = host?.closest<HTMLElement>(".hero");
+    if (!host || !hero || !starCanvas || !hazeCanvas || !dustCanvas) return;
+    const media = window.matchMedia(
+      "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)",
+    );
+    let grains: Grain[] = [];
+    let dustContext: CanvasRenderingContext2D | null = null;
+    let width = 0;
+    let height = 0;
+    let compact = false;
+    let frame = 0;
+    let last: { x: number; y: number; time: number } | null = null;
+
+    const prepare = (canvas: HTMLCanvasElement, scale: number) => {
+      canvas.width = Math.round(canvas.clientWidth * scale);
+      canvas.height = Math.round(canvas.clientHeight * scale);
+      const context = canvas.getContext("2d");
+      context?.scale(scale, scale);
+      return context;
     };
+
+    const paint = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      width = host.clientWidth;
+      height = host.clientHeight;
+      compact = width <= 700;
+      const scale = Math.min(window.devicePixelRatio || 1, 1.5);
+      // The star field overhangs the hero so large parallax never shows an edge.
+      const starContext = prepare(starCanvas, scale);
+      if (starContext) {
+        paintStars(starContext, starCanvas.clientWidth, starCanvas.clientHeight);
+      }
+      const hazeContext = prepare(hazeCanvas, scale);
+      if (hazeContext) paintHaze(hazeContext, width, height, compact);
+      dustContext = prepare(dustCanvas, scale);
+      grains = makeDust(width, height, compact);
+      if (dustContext) paintDust(dustContext, grains, width, height, compact);
+    };
+
+    // Springs pull every scattered grain home; the loop ends once all settle.
+    const settle = () => {
+      let moving = false;
+      for (const grain of grains) {
+        const home = grain.x === grain.homeX && grain.y === grain.homeY;
+        if (home && !grain.vx && !grain.vy) continue;
+        grain.vx = (grain.vx + (grain.homeX - grain.x) * 0.035) * 0.87;
+        grain.vy = (grain.vy + (grain.homeY - grain.y) * 0.035) * 0.87;
+        grain.x += grain.vx;
+        grain.y += grain.vy;
+        const resting =
+          Math.abs(grain.homeX - grain.x) < 0.08 &&
+          Math.abs(grain.homeY - grain.y) < 0.08 &&
+          Math.abs(grain.vx) + Math.abs(grain.vy) < 0.05;
+        if (resting) {
+          grain.x = grain.homeX;
+          grain.y = grain.homeY;
+          grain.vx = grain.vy = 0;
+        } else moving = true;
+      }
+      if (dustContext) paintDust(dustContext, grains, width, height, compact);
+      frame = moving ? requestAnimationFrame(settle) : 0;
+    };
+
+    const move = (event: PointerEvent) => {
+      if (!media.matches || event.pointerType !== "mouse") return;
+      // The trail layer drifts with the sky parallax; hit-test in its frame.
+      const shiftX = parseFloat(hero.style.getPropertyValue("--sky-x")) || 0;
+      const shiftY = parseFloat(hero.style.getPropertyValue("--sky-y")) || 0;
+      const box = host.getBoundingClientRect();
+      const x = event.clientX - box.left - shiftX * trailDepth;
+      const y = event.clientY - box.top - shiftY * trailDepth;
+      const previous = last;
+      last = { x, y, time: event.timeStamp };
+      if (!previous || event.timeStamp - previous.time > 120) return;
+      const dx = x - previous.x;
+      const dy = y - previous.y;
+      const speed = Math.min(60, Math.hypot(dx, dy));
+      if (speed < 0.5) return;
+      let touched = false;
+      for (const grain of grains) {
+        const ox = grain.x - x;
+        const oy = grain.y - y;
+        if (Math.abs(ox) > reach || Math.abs(oy) > reach) continue;
+        const distance = Math.hypot(ox, oy);
+        if (distance > reach) continue;
+        const falloff = 1 - distance / reach;
+        // Push outward, carry a little of the stroke, and add a random swirl.
+        const angle =
+          Math.atan2(oy, ox) + (Math.random() - 0.5) * 1.4;
+        const push = falloff * falloff * (1 + speed * 0.1);
+        grain.vx += Math.cos(angle) * push + dx * 0.04 * falloff;
+        grain.vy += Math.sin(angle) * push + dy * 0.04 * falloff;
+        touched = true;
+      }
+      if (touched && !frame) frame = requestAnimationFrame(settle);
+    };
+    const forget = () => {
+      last = null;
+    };
+
     const observer = new ResizeObserver(paint);
     observer.observe(host);
-    return () => observer.disconnect();
+    hero.addEventListener("pointermove", move, { passive: true });
+    hero.addEventListener("pointerleave", forget);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      hero.removeEventListener("pointermove", move);
+      hero.removeEventListener("pointerleave", forget);
+    };
   }, []);
 
   return (
-    <div className="night-sky" ref={sky} style={beaconStyle} aria-hidden="true">
+    <div
+      className="night-sky"
+      ref={sky}
+      style={beaconVars}
+      aria-hidden="true"
+    >
       <canvas ref={stars} className="sky-image" />
-      <canvas ref={contrail} className="flight-trail" />
-      <div className="trail-beacon" />
+      <div className="flight-trail">
+        <canvas ref={haze} className="trail-haze" />
+        <canvas ref={dust} className="trail-dust" />
+      </div>
     </div>
   );
 }

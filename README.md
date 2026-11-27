@@ -25,11 +25,11 @@ npm run start -- --port 3100
 - 카드의 개인 역할·핵심 개선, 상세 상단의 담당 범위·사례 바로가기, 공개 PR·고정 소스 링크
 - 구현·테스트·측정의 확인 범위와 남은 과제. 비공개 MOA·산학공동연구 소스는 공개 링크 없이 구분
 - 사례마다 붙인 분야(Frontend·Backend·AI)로 거르는 필터. `/?role=ai#work`처럼 직무별 주소로 바로 열 수 있음
-- 키보드로도 조작하는 "비행기 띄우기", 이메일 복사, PDF 다운로드
-- 밤하늘 히어로: 별과 반짝이는 궤적(`src/components/night-sky.tsx`), 노을 능선(`public/images/night-ridges.webp`). 비행기는 달빛 톤과 별똥별 꼬리를 달고 궤적을 따라 지나감
-- 마우스에 반응하는 하늘 패럴랙스와 프로젝트 이미지 틸트·빛 효과. 터치와 모션 감소 설정에서는 생략
+- 키보드로도 조작하는 혜성 날리기, 이메일 복사, PDF 다운로드
+- 밤하늘 히어로: 별과 반짝이는 혜성 꼬리(`src/components/night-sky.tsx`), 노을 능선(`public/images/night-ridges.webp`). 꼬리 끝의 혜성 머리를 누르면 그 자리에서 완만한 U자를 그리며 오른쪽에서 왼쪽으로 날아감(`src/components/comet.tsx`, 경로는 `src/components/flight-path.ts`)
+- 마우스에 반응하는 하늘 패럴랙스(별과 꼬리가 깊이를 달리해 움직임), 마우스가 지나가면 꼬리의 반짝이 입자가 흩어졌다 제자리로 돌아옴. 프로젝트 이미지 틸트·빛 효과. 터치와 모션 감소 설정에서는 생략
 - 반응형 WebP/AVIF 이미지와 자체 호스팅한 Pretendard 한글 서브셋 폰트
-- 서버 컴포넌트 중심 구성. 필터·클립보드·비행기·포인터 장식만 클라이언트에서 실행
+- 서버 컴포넌트 중심 구성. 필터·클립보드·하늘·혜성·포인터 장식만 클라이언트에서 실행
 - 모션 감소 설정, 건너뛰기 링크, 포커스 표시, 스크린리더 결과 안내
 
 ## 수정할 곳
@@ -69,11 +69,7 @@ PLOG 성능 수치의 출처인 이전 포트폴리오(2026-09)의 해당 쪽은
 npm run portrait
 ```
 
-소개 섹션 사진(`public/images/portrait.webp`)과, 배경을 지우고 얼굴만 자른 비행기 탑승자(`public/images/rider.webp`)가 함께 다시 만들어집니다. 히어로의 "비행기 띄우기"를 누르면 이 얼굴을 기수에 붙인 비행기가 별똥별 꼬리를 달고 히어로 글자 뒤로 왼쪽 끝에서 오른쪽 끝까지 지나갑니다(`src/components/paper-plane.tsx`). 배경 제거는 rembg(`birefnet-portrait` 모델)를 쓰며 처음 한 번 약 1GB 모델을 내려받습니다. 얼굴이 너무 넓게 잘리면 `scripts/make-rider.py`의 어깨 판정 비율(1.6)을 조정하세요.
-
-### 비행기 이미지
-
-`public/images/airplane.webp`는 NASA의 SOFIA 747SP 비행 사진(퍼블릭 도메인, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:SOFIA_over_clouds.jpg))의 배경을 지우고, 기관 로고·글자를 덮은 뒤 꼬리날개를 하늘색과 `w.` 표시로 다시 칠한 것입니다. 다시 만들 때는 `scripts/make-airplane.py` 상단의 안내를 따르세요.
+소개 섹션 사진(`public/images/portrait.webp`)이 다시 만들어집니다.
 
 ### 로고
 

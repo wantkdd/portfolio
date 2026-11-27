@@ -4,7 +4,7 @@ Verified 2026-10-30. Sources are official or upstream. GitHub popularity ranking
 
 - Next.js 16.4.3: https://github.com/vercel/next.js/releases/tag/v16.4.3
 - React 19.3.1: https://github.com/react/react/releases/tag/v19.3.1
-- Server Components for static content, client components only for filters, clipboard, paper-plane and pointer interactions: https://nextjs.org/docs/app/getting-started/server-and-client-components
+- Server Components for static content, client components only for filters, clipboard, night sky/comet and pointer interactions: https://nextjs.org/docs/app/getting-started/server-and-client-components
 - Local images with responsive sizes, reserved aspect ratios, and selective preloading: https://nextjs.org/docs/app/api-reference/components/image
 - Local font hosting: https://nextjs.org/docs/app/getting-started/fonts
 - Transform/opacity animations, no per-frame React state: https://web.dev/articles/animations-guide

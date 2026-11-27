@@ -235,15 +235,33 @@ img {
   --beacon-y: var(--desktop-beacon-y);
 }
 .night-sky canvas {
-  width: 100%;
-  height: 100%;
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* Overhang so the larger parallax never reveals the field's edge. */
+.night-sky .sky-image {
+  inset: -48px;
+  width: calc(100% + 96px);
+  height: calc(100% + 96px);
+}
+.sky-image,
+.flight-trail {
+  transition:
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 1.2s ease;
 }
 .hero[data-pointer-active] .sky-image {
   transform: translate(var(--sky-x), var(--sky-y));
 }
+/* Nearer layer moves less; keep the factor in sync with trailDepth in night-sky.tsx. */
+.hero[data-pointer-active] .flight-trail {
+  transform: translate(calc(var(--sky-x) * 0.6), calc(var(--sky-y) * 0.6));
+}
 .flight-trail {
+  position: absolute;
+  inset: 0;
   mask-image: linear-gradient(
     90deg,
     transparent 4%,
@@ -252,43 +270,9 @@ img {
     transparent calc(var(--beacon-x) + 0.35%)
   );
 }
-.trail-beacon {
-  position: absolute;
-  left: var(--beacon-x);
-  top: var(--beacon-y);
-  width: 5px;
-  height: 5px;
-  translate: -50% -50%;
-  border-radius: 50%;
-  background: #fffbdf;
-  box-shadow:
-    0 0 4px 2px #ffe5c7,
-    0 0 16px 6px #ffd4afac,
-    0 0 42px 14px #f9bb913d;
-  animation: glimmer 4.7s ease-in-out infinite alternate;
-}
-.trail-beacon::before,
-.trail-beacon::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  background: linear-gradient(90deg, transparent, #fff1d8 45% 55%, transparent);
-}
-.trail-beacon::before {
-  width: 24px;
-  height: 1px;
-}
-.trail-beacon::after {
-  width: 1px;
-  height: 16px;
-  background: linear-gradient(0deg, transparent, #fff1d8 45% 55%, transparent);
-}
-@keyframes glimmer {
-  to {
-    opacity: 0.64;
-  }
+.hero[data-comet] .flight-trail {
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 .hero-ridges {
   top: auto;
@@ -338,224 +322,155 @@ img {
   letter-spacing: 0.1em;
 }
 .hero h1 {
-  margin: 20px 0 22px -0.045em;
-  font-size: clamp(74px, 6.8vw, 110px);
-  font-weight: 680;
-  font-variation-settings: "wght" 680;
+  margin: 22px 0 0 -0.03em;
+  font-size: clamp(37px, 3.4vw, 55px);
+  font-weight: 660;
+  font-variation-settings: "wght" 660;
   font-synthesis: none;
-  line-height: 1.04;
-  letter-spacing: -0.075em;
+  line-height: 1.3;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+  word-break: keep-all;
 }
-.hero h1 span {
+.hero h1 > span {
+  display: block;
+}
+.hero h1 > span + span {
   color: #d5c5f4;
   background: linear-gradient(100deg, #d5ccf7 4%, #e0cdd8 97%);
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.hero-description {
-  max-width: 355px;
-  text-wrap: pretty;
-  color: #e2deec;
-  font-size: 16px;
-  line-height: 1.75;
-  letter-spacing: -0.015em;
-}
-.hero-description > span {
-  display: block;
-}
 .hero-actions {
   display: flex;
   gap: 10px;
-  margin-top: 26px;
+  margin-top: 34px;
 }
+
+/* The trail's head is the control: click it and the comet leaves from there. */
 .hero-signature {
+  --beacon-y: var(--desktop-beacon-y);
   position: absolute;
   z-index: 3;
-  top: 36%;
-  left: 82.4%;
-  transform: translateX(-50%);
+  left: var(--beacon-x);
+  top: var(--beacon-y);
+  width: 84px;
+  height: 84px;
+  translate: -50% -50%;
 }
-.hero-signature::before {
+.comet-head {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+.comet-head[aria-disabled="true"] {
+  cursor: default;
+}
+.comet-head::before {
   content: "";
   position: absolute;
-  bottom: calc(100% + 6px);
-  height: 28px;
-  left: 50%;
-  border-left: 1px dashed #f0d7dc66;
+  inset: 14px;
+  border-radius: 50%;
+  border: 1px solid #ffe3c766;
+  animation: comet-ring 2.8s ease-out infinite;
   pointer-events: none;
 }
-.plane-button {
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  border: 1px solid #f9d5c57a;
-  color: #fff4ea;
-  background: #262235cc;
+@keyframes comet-ring {
+  from {
+    transform: scale(0.45);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+.comet-star {
+  position: relative;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fffbe8;
   box-shadow:
-    0 4px 20px #1010191c,
-    inset 0 1px 0 #ffffff10;
-  border-radius: 30px;
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  padding: 0 15px;
+    0 0 8px 4px #ffe8cc,
+    0 0 28px 12px #ffd4afb8,
+    0 0 74px 30px #f9bb9152;
+  transition: scale 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation: glimmer 2.6s ease-in-out infinite alternate;
 }
-.plane-button svg {
-  color: #f0c8ae;
+.comet-star::before,
+.comet-star::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  background: linear-gradient(90deg, transparent, #fff3dc 45% 55%, transparent);
 }
-.plane-button small {
-  padding-left: 9px;
-  border-left: 1px solid #f9d5c559;
-  font: 10px/1.2 var(--mono);
-  color: #e5cfc4;
+.comet-star::before {
+  width: 92px;
+  height: 1.5px;
 }
-.plane-button:hover {
-  color: white;
-  background: #393043;
-  border-color: #e7cbbe;
+.comet-star::after {
+  width: 1.5px;
+  height: 58px;
+  background: linear-gradient(0deg, transparent, #fff3dc 45% 55%, transparent);
 }
-.plane-button {
-  min-width: 165px;
+@keyframes glimmer {
+  to {
+    opacity: 0.72;
+    transform: scale(0.86);
+  }
+}
+.comet-head:hover .comet-star {
+  scale: 1.35;
+}
+.comet-head:focus-visible {
+  outline: 2px solid #efe6ff;
+  outline-offset: -6px;
+}
+.hero[data-comet] .comet-head::before,
+.hero[data-comet] .comet-star {
+  opacity: 0;
+  animation: none;
+}
+.comet-hint,
+.flight-status {
+  position: absolute;
+  top: calc(100% - 6px);
+  left: 50%;
+  translate: -50% 0;
+  width: max-content;
+  max-width: 190px;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+  word-break: keep-all;
+  pointer-events: none;
+}
+.comet-hint {
+  color: #f3e3dccc;
+  letter-spacing: 0.02em;
+}
+.flight-status {
+  color: #fcf1ee;
 }
 .flight-status:empty {
   display: none;
 }
-.flight-status {
-  display: block;
-  margin-top: 8px;
-  font-size: 12px;
-  line-height: 1.5;
-  text-align: center;
-  color: #fcf1ee;
-  max-width: 170px;
-  word-break: keep-all;
-}
-
-.flight-layer {
+.comet-layer {
   position: absolute;
   z-index: 1;
   inset: 0;
-  pointer-events: none;
-  mask-image: linear-gradient(90deg, #0002 6%, #0007 24%, #000 45%);
-}
-/* Comet tail: the plane streaks across the night like a shooting star. */
-.hero-flight::before,
-.hero-flight::after {
-  content: "";
-  position: absolute;
-  top: 44%;
-  right: 80%;
-  width: 170%;
-  height: 22%;
-  pointer-events: none;
-}
-.hero-flight::before {
-  background:
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      #8f7cf21a 35%,
-      #c9b8ff73 72%,
-      #fff1dcd9 97%,
-      transparent 100%
-    )
-    center / 100% 26% no-repeat,
-    linear-gradient(
-      90deg,
-      transparent 10%,
-      #b9a6ff2e 60%,
-      #ffe3c266 96%,
-      transparent 100%
-    )
-    center / 100% 100% no-repeat;
-  border-radius: 50%;
-  filter: blur(5px);
-}
-.hero-flight::after {
-  background-image:
-    radial-gradient(circle, #fff 0 1.2px, transparent 2px),
-    radial-gradient(circle, #e4dbff 0 1px, transparent 1.6px),
-    radial-gradient(circle, #ffe7c7 0 1.4px, transparent 2.2px);
-  background-size:
-    46px 22px,
-    31px 17px,
-    67px 29px;
-  background-position:
-    0 3px,
-    11px 12px,
-    23px 6px;
-  mask-image: linear-gradient(90deg, transparent 5%, #0006 50%, #000 92%, transparent);
-  animation: comet-sparks 0.9s linear infinite;
-}
-@keyframes comet-sparks {
-  to {
-    background-position:
-      -46px 3px,
-      -20px 12px,
-      -44px 6px;
-  }
-}
-.hero-flight {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  pointer-events: none;
-  will-change: transform;
-  transform: translateX(-200vw);
-}
-/* Moonlit tint so the daylight cutout belongs in the dusk sky. */
-.hero-flight-plane {
-  position: relative;
-  z-index: 1;
-  display: block;
   width: 100%;
-  filter: brightness(0.7) contrast(1.08) saturate(0.72)
-    drop-shadow(0 0 1px #e4dbffcc) drop-shadow(0 0 16px #b9a6ff66)
-    drop-shadow(0 8px 10px #0a0a2280);
-}
-.hero-flight-rider {
-  position: absolute;
-  z-index: 2;
-  right: -1%;
-  top: 22%;
-  width: 21%;
-  filter: brightness(0.92) saturate(0.85) drop-shadow(0 0 10px #ffe3c24d);
-  mask-image: linear-gradient(to bottom, #000 62%, transparent 92%);
-}
-/* Comet head glow just ahead of the nose. */
-.hero-flight-glow {
-  position: absolute;
-  z-index: 0;
-  top: 30%;
-  right: -14%;
-  width: 34%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle, #fff6e6b3 0, #ffd9b04d 22%, #b9a6ff1f 48%, transparent 70%);
-  animation: comet-pulse 1.4s ease-in-out infinite alternate;
-}
-@keyframes comet-pulse {
-  to {
-    opacity: 0.6;
-    transform: scale(0.88);
-  }
-}
-.hero:has(.hero-flight) .flight-trail {
-  mask-image: linear-gradient(
-    90deg,
-    transparent calc(var(--wake-x, 0px) - 44vw),
-    black calc(var(--wake-x, 0px) - 8vw),
-    black var(--wake-x, 0px),
-    transparent calc(var(--wake-x, 0px) + 8px)
-  );
-}
-.hero:has(.hero-flight) .trail-beacon,
-.hero:has(.hero-flight) .hero-signature::before {
-  opacity: 0;
-  animation: none;
+  height: 100%;
+  pointer-events: none;
 }
 .hero-bottom {
   position: absolute;
@@ -600,9 +515,6 @@ img {
 @media (max-width: 900px) {
   .section-wrap {
     width: calc(100% - 64px);
-  }
-  .hero-description {
-    max-width: 330px;
   }
 }
 @media (max-width: 700px) {
@@ -659,13 +571,8 @@ img {
     font-size: 11px;
   }
   .hero h1 {
-    margin-block: 16px;
-    font-size: clamp(56px, 15.8vw, 85px);
-  }
-  .hero-description {
-    font-size: 14px;
-    line-height: 1.7;
-    max-width: 320px;
+    margin-top: 16px;
+    font-size: clamp(26px, 7.4vw, 40px);
   }
   .hero-actions {
     gap: 8px;
@@ -678,21 +585,9 @@ img {
     font-size: 13px;
   }
   .hero-signature {
-    top: 76%;
-    left: auto;
-    right: 6%;
-    transform: none;
-  }
-  .hero-signature::before {
-    left: 70%;
-    height: clamp(38px, 8.3svh, 76px);
-  }
-  .plane-button {
-    gap: 7px;
-    padding-inline: 12px;
-  }
-  .flight-layer {
-    mask-image: none;
+    --beacon-y: var(--mobile-beacon-y);
+    width: 72px;
+    height: 72px;
   }
   .hero-ridges {
     height: 21%;
@@ -704,9 +599,7 @@ img {
     font-size: 10px;
     letter-spacing: 0.055em;
   }
-  .plane-button {
-    min-width: 148px;
-  }
+  .comet-hint,
   .flight-status {
     font-size: 11px;
     line-height: 1.35;
@@ -747,19 +640,8 @@ img {
     gap: 7px;
   }
   .hero h1 {
-    font-size: clamp(41px, 5vw, 63px);
-    margin-block: 8px;
-  }
-  .hero h1 br {
-    display: none;
-  }
-  .hero h1 span {
-    margin-left: 0.1em;
-  }
-  .hero-description {
-    font-size: 13px;
-    max-width: 310px;
-    line-height: 1.6;
+    font-size: clamp(26px, 2.9vw, 34px);
+    margin-top: 10px;
   }
   .hero-actions {
     margin-top: 13px;
@@ -770,12 +652,8 @@ img {
     padding-inline: 14px;
   }
   .hero-signature {
-    left: auto;
-    right: 3.5%;
-    transform: none;
-  }
-  .hero-signature::before {
-    display: none;
+    width: 72px;
+    height: 72px;
   }
   .hero-bottom {
     height: 35px;
