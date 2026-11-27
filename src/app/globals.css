@@ -391,29 +391,37 @@ img {
     opacity: 0;
   }
 }
-/* Nucleus: the owner's face inside a warm coma glow. */
-.comet-face {
-  width: 40px;
-  height: 40px;
+/* Coma: a warm glow behind the cutout face. */
+.comet-head::after {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  z-index: -1;
   border-radius: 50%;
-  object-fit: cover;
-  object-position: 50% 30%;
-  background: #fff3e4;
-  border: 1.5px solid #ffeed6e6;
-  box-shadow:
-    0 0 10px 4px #ffe8ccb3,
-    0 0 34px 14px #ffd4af8c,
-    0 0 90px 36px #f9bb9147;
-  transition: scale 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  background: radial-gradient(
+    circle,
+    #fff4e2d9 0,
+    #ffd9b580 18%,
+    #d9c2ff2e 42%,
+    transparent 68%
+  );
   animation: glimmer 2.6s ease-in-out infinite alternate;
+  pointer-events: none;
 }
 @keyframes glimmer {
   to {
-    box-shadow:
-      0 0 8px 3px #ffe8cc99,
-      0 0 26px 10px #ffd4af73,
-      0 0 70px 26px #f9bb9133;
+    opacity: 0.7;
   }
+}
+/* Nucleus: the owner's cutout face, neckline faded so it has no edge. */
+.comet-face {
+  position: relative;
+  width: auto;
+  height: 46px;
+  margin-top: -4px;
+  mask-image: linear-gradient(to bottom, #000 60%, transparent 92%);
+  filter: drop-shadow(0 0 6px #ffe8cc99);
+  transition: scale 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .comet-head:hover .comet-face {
   scale: 1.15;
@@ -423,6 +431,7 @@ img {
   outline-offset: 4px;
 }
 .hero[data-comet] .comet-head::before,
+.hero[data-comet] .comet-head::after,
 .hero[data-comet] .comet-face {
   opacity: 0;
   animation: none;

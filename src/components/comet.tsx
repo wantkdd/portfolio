@@ -26,41 +26,44 @@ function pick(list: string[]) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
-// The nucleus is the owner's face inside a glowing coma; no starburst rays.
+/** Bake the cutout once with its neckline faded out, so it has no hard edge. */
+function fadeFace(face: HTMLImageElement) {
+  const sprite = document.createElement("canvas");
+  sprite.width = face.naturalWidth;
+  sprite.height = face.naturalHeight;
+  const context = sprite.getContext("2d");
+  if (!context) return null;
+  context.drawImage(face, 0, 0);
+  const fade = context.createLinearGradient(0, 0, 0, sprite.height);
+  fade.addColorStop(0.6, "#000");
+  fade.addColorStop(0.92, "transparent");
+  context.globalCompositeOperation = "destination-in";
+  context.fillStyle = fade;
+  context.fillRect(0, 0, sprite.width, sprite.height);
+  return sprite;
+}
+
+// The nucleus is the owner's cutout face riding inside a glowing coma.
 function drawHead(
   context: CanvasRenderingContext2D,
   x: number,
   y: number,
   scale: number,
-  face: HTMLImageElement,
+  face: HTMLCanvasElement | null,
 ) {
   const reach = 96 * scale;
   const halo = context.createRadialGradient(x, y, 0, x, y, reach);
-  halo.addColorStop(0, "rgba(255,246,228,0.95)");
-  halo.addColorStop(0.16, "rgba(255,226,200,0.55)");
+  halo.addColorStop(0, "rgba(255,246,228,0.9)");
+  halo.addColorStop(0.16, "rgba(255,226,200,0.5)");
   halo.addColorStop(0.4, "rgba(222,196,255,0.18)");
   halo.addColorStop(1, "rgba(214,190,255,0)");
   context.fillStyle = halo;
   context.fillRect(x - reach, y - reach, reach * 2, reach * 2);
-
-  const radius = 15 * scale;
+  if (!face) return;
+  const height = 40 * scale;
+  const width = (height * face.width) / face.height;
   context.globalCompositeOperation = "source-over";
-  context.save();
-  context.beginPath();
-  context.arc(x, y, radius, 0, Math.PI * 2);
-  context.fillStyle = "#fff3e4";
-  context.fill();
-  if (face.complete && face.naturalWidth) {
-    context.clip();
-    const side = radius * 2.3;
-    context.drawImage(face, x - side / 2, y - side * 0.44, side, side);
-  }
-  context.restore();
-  context.strokeStyle = "rgba(255,238,214,0.9)";
-  context.lineWidth = 1.6 * scale;
-  context.beginPath();
-  context.arc(x, y, radius, 0, Math.PI * 2);
-  context.stroke();
+  context.drawImage(face, x - width / 2, y - height * 0.55, width, height);
   context.globalCompositeOperation = "lighter";
 }
 
@@ -90,7 +93,11 @@ export function Comet() {
     const height = hero.clientHeight;
     const compact = width <= 700;
     const scale = compact ? 1 : 1.45;
+    let faceSprite: HTMLCanvasElement | null = null;
     const face = new Image();
+    face.onload = () => {
+      faceSprite = fadeFace(face);
+    };
     face.src = FACE_SRC;
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     layer.width = Math.round(width * ratio);
@@ -184,7 +191,7 @@ export function Comet() {
         context.fillRect(spark.x, spark.y, spark.size, spark.size);
       }
 
-      if (t < 1) drawHead(context, head.x, head.y, scale, face);
+      if (t < 1) drawHead(context, head.x, head.y, scale, faceSprite);
       context.globalCompositeOperation = "source-over";
 
       if (t < 1 || sparks.length || trail.length) {
